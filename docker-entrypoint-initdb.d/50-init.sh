@@ -27,13 +27,17 @@ echo 'CREATE SCHEMA documentation;' | ./mbslave-psql.py -S
 ./mbslave-remap-schema.py < sql/wikidocs/CreateTables.sql | ./mbslave-psql.py
 ./mbslave-remap-schema.py < sql/documentation/CreateTables.sql | ./mbslave-psql.py
 
-./mbslave-import.py /docker-entrypoint-initdb.d/mbdump.tar.bz2
+./mbslave-import.py /docker-entrypoint-initdb.d/*.tar.bz2
 
 ./mbslave-remap-schema.py < sql/CreatePrimaryKeys.sql | ./mbslave-psql.py
 ./mbslave-remap-schema.py < sql/statistics/CreatePrimaryKeys.sql | ./mbslave-psql.py
 ./mbslave-remap-schema.py < sql/caa/CreatePrimaryKeys.sql | ./mbslave-psql.py
 ./mbslave-remap-schema.py < sql/wikidocs/CreatePrimaryKeys.sql | ./mbslave-psql.py
 ./mbslave-remap-schema.py < sql/documentation/CreatePrimaryKeys.sql | ./mbslave-psql.py
+
+sed -i 's/\\set ON_ERROR_STOP.*/\\set ON_ERROR_STOP off/' sql/CreateFKConstraints.sql
+
+./mbslave-remap-schema.py < sql/CreateFKConstraints.sql | ./mbslave-psql.py
 
 ./mbslave-remap-schema.py < sql/CreateIndexes.sql | grep -v musicbrainz_collate | ./mbslave-psql.py
 ./mbslave-remap-schema.py < sql/CreateSlaveIndexes.sql | ./mbslave-psql.py
