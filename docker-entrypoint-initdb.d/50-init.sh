@@ -35,6 +35,8 @@ echo 'CREATE SCHEMA documentation;' | ./mbslave-psql.py -S
 ./mbslave-remap-schema.py < sql/wikidocs/CreatePrimaryKeys.sql | ./mbslave-psql.py
 ./mbslave-remap-schema.py < sql/documentation/CreatePrimaryKeys.sql | ./mbslave-psql.py
 
+./mbslave-sync.py
+
 sed -i 's/\\set ON_ERROR_STOP.*/\\set ON_ERROR_STOP off/' sql/CreateFKConstraints.sql
 
 ./mbslave-remap-schema.py < sql/CreateFKConstraints.sql | ./mbslave-psql.py
